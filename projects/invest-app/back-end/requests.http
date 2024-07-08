@@ -2,3 +2,12 @@
 
 ### list investments
 GET {{domain}}/investments
+
+### create investment
+POST {{domain}}/investments
+Content-Type: application/json
+
+{
+  "name": "Tesouro Selic 2029",
+  "value": "300"
+}
