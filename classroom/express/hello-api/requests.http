@@ -1,0 +1,10 @@
+@domain=http://localhost:3000
+
+### Rota raiz
+GET {{domain}}/
+
+### Rota ola
+GET {{domain}}/ola
+
+### Rota hello/en
+GET {{domain}}/hello/en?name=IFPB
