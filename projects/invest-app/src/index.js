@@ -1,8 +1,8 @@
+import 'express-async-errors';
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import router from './routes.js';
-import Seed from './database/seeders.js';
 
 const server = express();
 
@@ -23,7 +23,5 @@ server.use(
 );
 
 server.use(router);
-
-await Seed.up();
 
 server.listen(3000, () => console.log('Server is running on port 3000'));

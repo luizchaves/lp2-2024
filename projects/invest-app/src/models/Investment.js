@@ -1,71 +1,122 @@
-import { v4 as uuidv4 } from 'uuid';
-import { investments } from '../database/data.js';
+import Database from '../database/database.js';
 
-function create({ name, value }) {
-  const id = uuidv4();
-
-  const investment = { name, value, id };
+async function create({ name, value }) {
+  const db = await Database.connect();
 
   if (name && value) {
-    investments.push(investment);
+    const sql = `
+      INSERT INTO
+        investments (name, value)
+      VALUES
+        (?, ?)
+    `;
 
-    return investment;
+    const { lastID } = await db.run(sql, [name, value]);
+
+    return await readById(lastID);
   } else {
     throw new Error('Unable to create investment');
   }
 }
 
-function read(field, value) {
-  if (field && value) {
-    const filteredInvestments = investments.filter((investment) =>
-      investment[field].includes(value)
-    );
+async function read(field, value) {
+  const db = await Database.connect();
 
-    return filteredInvestments;
+  if (field && value) {
+    const sql = `
+      SELECT
+          id, name, value
+        FROM
+          investments
+        WHERE
+          ${field} = '?'
+      `;
+
+    const investments = await db.all(sql, [value]);
+
+    return investments;
   }
+
+  const sql = `
+    SELECT
+      id, name, value
+    FROM
+      investments
+  `;
+
+  const investments = await db.all(sql);
 
   return investments;
 }
 
-function readById(id) {
-  if (id) {
-    const index = investments.findIndex((investment) => investment.id === id);
+async function readById(id) {
+  const db = await Database.connect();
 
-    if (!investments[index]) {
+  if (id) {
+    const sql = `
+      SELECT
+          id, name, value
+        FROM
+          investments
+        WHERE
+          id = ?
+      `;
+
+    const investment = await db.get(sql, [id]);
+
+    if (investment) {
+      return investment;
+    } else {
       throw new Error('Investment not found');
     }
-
-    return investments[index];
   } else {
     throw new Error('Unable to find investment');
   }
 }
 
-function update({ id, name, value }) {
+async function update({ id, name, value }) {
+  const db = await Database.connect();
+
   if (name && value && id) {
-    const newInvestment = { name, value, id };
+    const sql = `
+      UPDATE
+        investments
+      SET
+        name = ?, value = ?
+      WHERE
+        id = ?
+    `;
 
-    const index = investments.findIndex((investment) => investment.id === id);
+    const { changes } = await db.run(sql, [name, value, id]);
 
-    if (!investments[index]) {
+    if (changes === 1) {
+      return readById(id);
+    } else {
       throw new Error('Investment not found');
     }
-
-    investments[index] = newInvestment;
-
-    return newInvestment;
   } else {
     throw new Error('Unable to update investment');
   }
 }
 
-function remove(id) {
+async function remove(id) {
+  const db = await Database.connect();
+
   if (id) {
-    const index = investments.findIndex((investment) => investment.id === id);
+    const sql = `
+      DELETE FROM
+        investments
+      WHERE
+        id = ?
+    `;
 
-    investments.splice(index, 1);
+    const { changes } = await db.run(sql, [id]);
 
-    return true;
+    if (changes === 1) {
+      return true;
+    } else {
+      throw new Error('Investment not found');
+    }
   } else {
     throw new Error('Investment not found');
   }
