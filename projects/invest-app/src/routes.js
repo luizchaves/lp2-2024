@@ -16,7 +16,7 @@ router.post('/investments', async (req, res) => {
 
     const createdInvestment = await Investment.create(investment);
 
-    return res.status(201).json(createdInvestment);
+    return res.json(createdInvestment);
   } catch (error) {
     throw new HTTPError('Unable to create investment', 400);
   }
@@ -29,7 +29,7 @@ router.get('/investments', async (req, res) => {
     let investments;
 
     if (name) {
-      investments = await Investment.read('name', name);
+      investments = await Investment.read({ name });
     } else {
       investments = await Investment.read();
     }
@@ -42,7 +42,7 @@ router.get('/investments', async (req, res) => {
 
 router.get('/investments/:id', async (req, res) => {
   try {
-    const id = Number(req.params.id);
+    const id = req.params.id;
 
     const investment = await Investment.readById(id);
 
@@ -56,7 +56,7 @@ router.put('/investments/:id', async (req, res) => {
   try {
     const investment = req.body;
 
-    const id = Number(req.params.id);
+    const id = req.params.id;
 
     const updatedInvestment = await Investment.update({ ...investment, id });
 
@@ -67,7 +67,7 @@ router.put('/investments/:id', async (req, res) => {
 });
 
 router.delete('/investments/:id', async (req, res) => {
-  const id = Number(req.params.id);
+  const id = req.params.id;
 
   if (await Investment.remove(id)) {
     return res.sendStatus(204);

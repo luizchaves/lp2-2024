@@ -1,124 +1,73 @@
-import Database from '../database/database.js';
+import prisma from '../database/database.js';
 
 async function create({ name, value }) {
-  const db = await Database.connect();
-
   if (name && value) {
-    const sql = `
-      INSERT INTO
-        investments (name, value)
-      VALUES
-        (?, ?)
-    `;
+    const createdInvestment = await prisma.investment.create({
+      data: { name, value },
+    });
 
-    const { lastID } = await db.run(sql, [name, value]);
-
-    return await readById(lastID);
+    return createdInvestment;
   } else {
     throw new Error('Unable to create investment');
   }
 }
 
-async function read(field, value) {
-  const db = await Database.connect();
-
-  if (field && value) {
-    const sql = `
-      SELECT
-          id, name, value
-        FROM
-          investments
-        WHERE
-          ${field} = '?'
-      `;
-
-    const investments = await db.all(sql, [value]);
-
-    return investments;
+async function read(where) {
+  if (where?.name) {
+    where.name = {
+      contains: where.name,
+    };
   }
 
-  const sql = `
-    SELECT
-      id, name, value
-    FROM
-      investments
-  `;
+  const investments = await prisma.investment.findMany({ where });
 
-  const investments = await db.all(sql);
+  if (investments.length === 1 && where) {
+    return investments[0];
+  }
 
   return investments;
 }
 
 async function readById(id) {
-  const db = await Database.connect();
-
   if (id) {
-    const sql = `
-      SELECT
-          id, name, value
-        FROM
-          investments
-        WHERE
-          id = ?
-      `;
+    const investment = await prisma.investment.findUnique({
+      where: {
+        id,
+      },
+    });
 
-    const investment = await db.get(sql, [id]);
-
-    if (investment) {
-      return investment;
-    } else {
-      throw new Error('Investment not found');
-    }
+    return investment;
   } else {
     throw new Error('Unable to find investment');
   }
 }
 
 async function update({ id, name, value }) {
-  const db = await Database.connect();
-
   if (name && value && id) {
-    const sql = `
-      UPDATE
-        investments
-      SET
-        name = ?, value = ?
-      WHERE
-        id = ?
-    `;
+    const updatedInvestment = await prisma.investment.update({
+      where: {
+        id,
+      },
+      data: { name, value },
+    });
 
-    const { changes } = await db.run(sql, [name, value, id]);
-
-    if (changes === 1) {
-      return readById(id);
-    } else {
-      throw new Error('Investment not found');
-    }
+    return updatedInvestment;
   } else {
     throw new Error('Unable to update investment');
   }
 }
 
 async function remove(id) {
-  const db = await Database.connect();
-
   if (id) {
-    const sql = `
-      DELETE FROM
-        investments
-      WHERE
-        id = ?
-    `;
+    await prisma.investment.delete({
+      where: {
+        id,
+      },
+    });
 
-    const { changes } = await db.run(sql, [id]);
-
-    if (changes === 1) {
-      return true;
-    } else {
-      throw new Error('Investment not found');
-    }
+    return true;
   } else {
-    throw new Error('Investment not found');
+    throw new Error('Unable to remove investment');
   }
 }
 
