@@ -1,15 +1,32 @@
 @host = http://localhost:3000
 @createdInvestmentId = {{createdInvestment.response.body.$.id}}
 
+### Read Categories
+
+GET {{host}}/categories
+
+### Read Categories by Name
+
+# @name categoryPos
+GET {{host}}/categories?name=Pós
+
+### Read Categories by Name
+
+# @name categoryIpca
+GET {{host}}/categories?name=IPCA
+
 ### Create Investment
+
+@categoryIpcaId = {{categoryIpca.response.body.$.id}}
 
 # @name createdInvestment
 POST {{host}}/investments
 Content-Type: application/json
 
 {
-  "name": "Tesouro IPCA 2029",
-  "value": 100
+  "name": "Tesouro Selic 2029",
+  "value": 10000,
+  "categoryId": "{{categoryIpcaId}}"
 }
 
 ### Read Investments
@@ -22,14 +39,18 @@ GET {{host}}/investments?name=Tesouro
 
 ### Update Investment
 
+@categoryPosId = {{categoryPos.response.body.$.id}}
+
 PUT {{host}}/investments/{{createdInvestmentId}}
 Content-Type: application/json
 
 {
-  "name": "Tesouro IPCA 2029",
-  "value": 200
+  "name": "Tesouro Selic 2029",
+  "value": 20000,
+  "categoryId": "{{categoryPosId}}"
 }
 
 ### Delete Investment
 
 DELETE {{host}}/investments/{{createdInvestmentId}}
+

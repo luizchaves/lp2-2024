@@ -1,4 +1,5 @@
 import express from 'express';
+import Category from './models/Category.js';
 import Investment from './models/Investment.js';
 
 class HTTPError extends Error {
@@ -67,12 +68,34 @@ router.put('/investments/:id', async (req, res) => {
 });
 
 router.delete('/investments/:id', async (req, res) => {
-  const id = req.params.id;
+  try {
+    const id = req.params.id;
 
-  if (await Investment.remove(id)) {
-    return res.sendStatus(204);
-  } else {
+    if (await Investment.remove(id)) {
+      return res.sendStatus(204);
+    } else {
+      throw new Error();
+    }
+  } catch (error) {
     throw new HTTPError('Unable to remove investment', 400);
+  }
+});
+
+router.get('/categories', async (req, res) => {
+  try {
+    const { name } = req.query;
+
+    let categories;
+
+    if (name) {
+      categories = await Category.read({ name });
+    } else {
+      categories = await Category.read();
+    }
+
+    return res.json(categories);
+  } catch (error) {
+    throw new HTTPError('Unable to read investments', 400);
   }
 });
 

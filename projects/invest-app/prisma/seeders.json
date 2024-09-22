@@ -1,12 +1,28 @@
 {
-  "investments": [
+  "categories": [
     {
-      "name": "Tesouro Selic 2029",
-      "value": 100000
+      "name": "Pós",
+      "color": "#6366f1"
     },
     {
-      "name": "Tesouro Selic 2029",
-      "value": 50000
+      "name": "Pré",
+      "color": "#d946ef"
+    },
+    {
+      "name": "IPCA",
+      "color": "#f43f5e"
+    },
+    {
+      "name": "Renda Variável",
+      "color": "#eab308"
+    },
+    {
+      "name": "Fundo de Investimento",
+      "color": "#46efb1"
+    },
+    {
+      "name": "Outros",
+      "color": "#111111"
     }
   ]
 }

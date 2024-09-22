@@ -1,9 +1,12 @@
 import prisma from '../database/database.js';
 
-async function create({ name, value }) {
-  if (name && value) {
+async function create({ name, value, categoryId }) {
+  if (name && value && categoryId) {
     const createdInvestment = await prisma.investment.create({
-      data: { name, value },
+      data: { name, value, categoryId },
+      include: {
+        category: true,
+      },
     });
 
     return createdInvestment;
@@ -19,7 +22,12 @@ async function read(where) {
     };
   }
 
-  const investments = await prisma.investment.findMany({ where });
+  const investments = await prisma.investment.findMany({
+    where,
+    include: {
+      category: true,
+    },
+  });
 
   if (investments.length === 1 && where) {
     return investments[0];
@@ -34,6 +42,9 @@ async function readById(id) {
       where: {
         id,
       },
+      include: {
+        category: true,
+      },
     });
 
     return investment;
@@ -42,13 +53,16 @@ async function readById(id) {
   }
 }
 
-async function update({ id, name, value }) {
+async function update({ id, name, value, categoryId }) {
   if (name && value && id) {
     const updatedInvestment = await prisma.investment.update({
       where: {
         id,
       },
-      data: { name, value },
+      data: { name, value, categoryId },
+      include: {
+        category: true,
+      },
     });
 
     return updatedInvestment;

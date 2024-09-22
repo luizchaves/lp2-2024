@@ -11,7 +11,16 @@ datasource db {
 }
 
 model Investment {
-  id    String @id @default(uuid())
-  name  String
-  value Int
+  id         String   @id @default(cuid())
+  name       String
+  value      Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+}
+
+model Category {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  color       String       @unique
+  investments Investment[]
 }

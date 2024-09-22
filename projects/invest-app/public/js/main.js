@@ -8,6 +8,8 @@ const bsOffcanvas = new bootstrap.Offcanvas('.offcanvas');
 const confirmModal = new bootstrap.Modal('.modal');
 
 function InvestmentCard(investment) {
+  const category = investment.category;
+
   return `<div class="col" id="investment-${investment.id}">
     <div class="card">
       <div class="card-header">
@@ -38,6 +40,14 @@ function InvestmentCard(investment) {
             ${formatCurrency(investment.value / 100)}
           </span>
         </div>
+        <div>
+          <span class="fw-bold">Categoria:</span>
+          <span class="badge investment-category" style="background-color: ${
+            category.color
+          }">
+            ${category.name}
+          </span>
+        </div>
       </div>
     </div>
   </div>`;
@@ -64,11 +74,18 @@ async function loadInvestmentCards() {
   }
 }
 
-function updateInvestmentCard({ id, name, value }) {
+function updateInvestmentCard({ id, name, value, category }) {
   document.querySelector(`#investment-${id} .investment-name`).innerText = name;
 
   document.querySelector(`#investment-${id} .investment-value`).innerText =
     formatCurrency(value / 100);
+
+  document.querySelector(
+    `#investment-${id} .investment-category`
+  ).style.backgroundColor = category.color;
+
+  document.querySelector(`#investment-${id} .investment-category`).innerText =
+    category.name;
 }
 
 function loadHandleFormSubmit(type, id) {
@@ -150,8 +167,22 @@ function loadHandleRemoveInvestment() {
   };
 }
 
+async function loadCategoriesSelect() {
+  const select = document.querySelector('#categoryId');
+
+  const categories = await API.read('/categories');
+
+  for (const category of categories) {
+    const option = `<option value="${category.id}">${category.name}</option>`;
+
+    select.insertAdjacentHTML('beforeend', option);
+  }
+}
+
 loadInvestmentCards();
 
 loadHandleCreateInvestment();
+
+loadCategoriesSelect();
 
 loadHandleRemoveInvestment();
