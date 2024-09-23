@@ -1,6 +1,7 @@
 import express from 'express';
 import Category from './models/Category.js';
 import Investment from './models/Investment.js';
+import User from './models/User.js';
 
 class HTTPError extends Error {
   constructor(message, code) {
@@ -11,9 +12,19 @@ class HTTPError extends Error {
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+  res.redirect('/signup.html');
+});
+
 router.post('/investments', async (req, res) => {
   try {
     const investment = req.body;
+
+    if (!investment.userId) {
+      const user = await User.read({ email: 'admin@email.com' });
+
+      investment.userId = user.id;
+    }
 
     const createdInvestment = await Investment.create(investment);
 
@@ -47,6 +58,8 @@ router.get('/investments/:id', async (req, res) => {
 
     const investment = await Investment.readById(id);
 
+    const userId = await User.read({ name: 'admin@email.com' }).id;
+
     return res.json(investment);
   } catch (error) {
     throw new HTTPError('Unable to find investment', 400);
@@ -58,6 +71,12 @@ router.put('/investments/:id', async (req, res) => {
     const investment = req.body;
 
     const id = req.params.id;
+
+    if (!investment.userId) {
+      const user = await User.read({ email: 'admin@email.com' });
+
+      investment.userId = user.id;
+    }
 
     const updatedInvestment = await Investment.update({ ...investment, id });
 
@@ -96,6 +115,22 @@ router.get('/categories', async (req, res) => {
     return res.json(categories);
   } catch (error) {
     throw new HTTPError('Unable to read investments', 400);
+  }
+});
+
+router.post('/users', async (req, res) => {
+  try {
+    const user = req.body;
+
+    delete user.confirmationPassword;
+
+    const newUser = await User.create(user);
+
+    delete newUser.password;
+
+    res.status(201).json(newUser);
+  } catch (error) {
+    throw new HTTPError('Unable to create user', 400);
   }
 });
 

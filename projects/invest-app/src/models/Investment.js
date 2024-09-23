@@ -1,11 +1,18 @@
 import prisma from '../database/database.js';
 
-async function create({ name, value, categoryId }) {
-  if (name && value && categoryId) {
+async function create({ name, value, categoryId, userId }) {
+  if (name && value && categoryId && userId) {
     const createdInvestment = await prisma.investment.create({
-      data: { name, value, categoryId },
+      data: { name, value, categoryId, userId },
       include: {
         category: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
       },
     });
 
@@ -26,6 +33,13 @@ async function read(where) {
     where,
     include: {
       category: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
     },
   });
 
@@ -44,6 +58,13 @@ async function readById(id) {
       },
       include: {
         category: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
       },
     });
 
@@ -53,15 +74,22 @@ async function readById(id) {
   }
 }
 
-async function update({ id, name, value, categoryId }) {
+async function update({ id, name, value, categoryId, userId }) {
   if (name && value && id) {
     const updatedInvestment = await prisma.investment.update({
       where: {
         id,
       },
-      data: { name, value, categoryId },
+      data: { name, value, categoryId, userId },
       include: {
         category: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
       },
     });
 
