@@ -1,6 +1,5 @@
-import { resolve } from 'node:path';
-import { readFileSync } from 'node:fs';
 import { PrismaClient } from '@prisma/client';
+import User from '../src/models/User.js';
 
 const prisma = new PrismaClient();
 
@@ -36,12 +35,10 @@ async function main() {
     data: categories,
   });
 
-  await prisma.user.create({
-    data: {
-      name: 'Admin',
-      email: 'admin@email.com',
-      password: 'admin',
-    },
+  await User.create({
+    name: 'Admin',
+    email: 'admin@email.com',
+    password: 'admin',
   });
 }
 
