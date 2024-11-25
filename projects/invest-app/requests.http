@@ -7,7 +7,7 @@
 ### Create User
 
 # @name createdUser
-POST {{host}}/users
+POST {{host}}/api/users
 Content-Type: application/json
 
 {
@@ -19,7 +19,7 @@ Content-Type: application/json
 ### Signin 401
 
 # @name signin
-POST {{host}}/signin
+POST {{host}}/api/signin
 Content-Type: application/json
 
 {
@@ -30,7 +30,7 @@ Content-Type: application/json
 ### Signin Ok
 
 # @name signin
-POST {{host}}/signin
+POST {{host}}/api/signin
 Content-Type: application/json
 
 {
@@ -40,28 +40,28 @@ Content-Type: application/json
 
 ### Read User (whitout token)
 
-GET {{host}}/users/me
+GET {{host}}/api/users/me
 
 ### Read User (with token)
 
-GET {{host}}/users/me
+GET {{host}}/api/users/me
 Authorization: bearer {{token}}
 
 ### Read Categories
 
-GET {{host}}/categories
+GET {{host}}/api/categories
 Authorization: bearer {{token}}
 
 ### Read Category Pós
 
 # @name categoryPos
-GET {{host}}/categories?name=Pós
+GET {{host}}/api/categories?name=Pós
 Authorization: bearer {{token}}
 
 ### Read Category IPCA
 
 # @name categoryIpca
-GET {{host}}/categories?name=IPCA
+GET {{host}}/api/categories?name=IPCA
 Authorization: bearer {{token}}
 
 ### Create Investment
@@ -69,7 +69,7 @@ Authorization: bearer {{token}}
 @categoryIpcaId = {{categoryIpca.response.body.$.id}}
 
 # @name createdInvestment
-POST {{host}}/investments
+POST {{host}}/api/investments
 Authorization: bearer {{token}}
 Content-Type: application/json
 
@@ -82,24 +82,24 @@ Content-Type: application/json
 
 ### Read Investments
 
-GET {{host}}/investments
+GET {{host}}/api/investments
 Authorization: bearer {{token}}
 
 ### Read Investments by Name
 
-GET {{host}}/investments?name=Tesouro
+GET {{host}}/api/investments?name=Tesouro
 Authorization: bearer {{token}}
 
 ### Read Investments by Id
 
-GET {{host}}/investments/{{createdInvestmentId}}
+GET {{host}}/api/investments/{{createdInvestmentId}}
 Authorization: bearer {{token}}
 
 ### Update Investment
 
 @categoryPosId = {{categoryPos.response.body.$.id}}
 
-PUT {{host}}/investments/{{createdInvestmentId}}
+PUT {{host}}/api/investments/{{createdInvestmentId}}
 Authorization: bearer {{token}}
 Content-Type: application/json
 
@@ -112,5 +112,5 @@ Content-Type: application/json
 
 ### Delete Investment
 
-DELETE {{host}}/investments/{{createdInvestmentId}}
+DELETE {{host}}/api/investments/{{createdInvestmentId}}
 Authorization: bearer {{token}}
