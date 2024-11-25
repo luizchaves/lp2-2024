@@ -23,6 +23,10 @@ server.use(express.json());
 
 server.use(express.static('public'));
 
+server.get('/', (req, res) => {
+  res.redirect('/signup.html');
+});
+
 server.use('/api', router);
 
 server.listen(3000, () => {

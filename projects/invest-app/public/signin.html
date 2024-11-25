@@ -30,19 +30,19 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/signin.html"
-                >Entrar</a
-              >
+              <a class="nav-link" href="/signin.html">Entrar</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/signup.html">Cadastrar</a>
+              <a class="nav-link active" aria-current="page" href="/signup.html"
+                >Cadastrar</a
+              >
             </li>
           </ul>
         </div>
       </div>
     </nav>
-    <div class="container pb-5">
-      <h1 class="text-center my-5 fw-bold">Entrar</h1>
+    <div class="container position-relative pb-5">
+      <h1 class="text-center py-5 fw-bold">Cadastro de Usuário</h1>
 
       <div class="row justify-content-center">
         <form
@@ -50,6 +50,17 @@
           onsubmit="handleSubmit(event)"
           novalidate
         >
+          <div class="mb-3">
+            <label for="name" class="form-label">Nome</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              name="name"
+              required
+            />
+            <div class="invalid-feedback">Informe o nome do usuário.</div>
+          </div>
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <input
@@ -77,9 +88,43 @@
             </div>
           </div>
           <div class="mb-3">
-            <input type="submit" class="btn btn-primary" value="Entrar" />
+            <label for="confirmationPassword" class="form-label"
+              >Confirmar Senha</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              id="confirmationPassword"
+              name="confirmationPassword"
+              required
+            />
+            <div class="invalid-feedback">Informe a confirmação de senha.</div>
+          </div>
+          <div class="mb-3">
+            <input type="submit" class="btn btn-primary" value="Cadastrar" />
           </div>
         </form>
+      </div>
+
+      <div class="position-absolute top-0 end-0 p-3" style="z-index: 11">
+        <div
+          id="liveToast"
+          class="toast"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+          data-bs-delay="4000"
+        >
+          <div class="toast-header">
+            <strong class="me-auto"></strong>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -88,6 +133,6 @@
       integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
       crossorigin="anonymous"
     ></script>
-    <script src="js/signin.js" type="module"></script>
+    <script src="js/signup.js" type="module"></script>
   </body>
 </html>
