@@ -6,6 +6,8 @@ import { z } from 'zod';
 import { isAuthenticated } from './middleware/auth.js';
 import { validate } from './middleware/validate.js';
 
+import SendMail from './services/SendMail.js';
+
 import Category from './models/Category.js';
 import Investment from './models/Investment.js';
 import User from './models/User.js';
@@ -219,6 +221,8 @@ router.post(
 
       const newUser = await User.create(user);
 
+      await SendMail.createNewUser(user.email);
+
       delete newUser.password;
 
       res.status(201).json(newUser);
@@ -286,7 +290,7 @@ router.use((req, res, next) => {
 
 // Error handler
 router.use((err, req, res, next) => {
-  // console.error(err.stack);
+  console.error(err.stack);
   if (err instanceof HTTPError) {
     return res.status(err.code).json({ message: err.message });
   } else {
