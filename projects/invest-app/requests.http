@@ -3,6 +3,7 @@
 @createdUserId = {{createdUser.response.body.$.id}}
 @categoryPosId = {{categoryPos.response.body.$.id}}
 @token = {{signin.response.body.$.token}}
+@userId = {{userMe.response.body.$.id}}
 
 ### Create User
 
@@ -44,8 +45,43 @@ GET {{host}}/api/users/me
 
 ### Read User (with token)
 
+# @name userMe
 GET {{host}}/api/users/me
 Authorization: bearer {{token}}
+
+### Create Image (User)
+
+POST {{host}}/api/users/image
+Authorization: bearer {{token}}
+Content-Type: multipart/form-data; boundary="boundary"
+
+--boundary
+Content-Disposition: form-data; name="userId"
+
+{{createdUserId}}
+--boundary
+Content-Disposition: form-data; name="image"; filename="avatar.png"
+Content-Type: image/png
+
+< ./public/imgs/profile/avatar.png
+--boundary--
+
+### Update Image (User)
+
+PUT {{host}}/api/users/image
+Authorization: bearer {{token}}
+Content-Type: multipart/form-data; boundary="boundary"
+
+--boundary
+Content-Disposition: form-data; name="userId"
+
+{{userId}}
+--boundary
+Content-Disposition: form-data; name="image"; filename="avatar.png"
+Content-Type: image/png
+
+< ./public/imgs/profile/avatar.png
+--boundary--
 
 ### Read Categories
 

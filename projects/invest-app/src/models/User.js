@@ -20,6 +20,13 @@ async function create({ name, email, password }) {
 async function read(where) {
   const users = await prisma.user.findMany({
     where,
+    include: {
+      image: {
+        select: {
+          path: true,
+        },
+      },
+    },
   });
 
   if (users.length === 1 && where) {
@@ -34,6 +41,13 @@ async function readById(id) {
     const user = await prisma.user.findUnique({
       where: {
         id,
+      },
+      include: {
+        image: {
+          select: {
+            path: true,
+          },
+        },
       },
     });
 

@@ -237,9 +237,27 @@ async function loadUser() {
   userName.innerText = user.name;
 }
 
+async function loadProfile() {
+  const user = await API.read('/users/me');
+
+  let image;
+
+  if (user.image) {
+    image = user.image.path;
+  } else {
+    image = '/imgs/profile/avatar.png';
+  }
+
+  document.querySelector('#user-name').innerText = user.name;
+
+  document.querySelector('#dropdown-avatar').src = image;
+}
+
 window.signout = Auth.signout;
 
 if (Auth.isAuthenticated()) {
+  loadProfile();
+
   loadInvestmentCards();
 
   loadHandleCreateInvestment();

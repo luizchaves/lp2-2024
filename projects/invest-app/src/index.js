@@ -21,6 +21,8 @@ server.use(
 
 server.use(express.json());
 
+server.use(express.urlencoded({ extended: true }));
+
 server.use(express.static('public'));
 
 server.get('/', (req, res) => {

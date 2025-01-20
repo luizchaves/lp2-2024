@@ -2,17 +2,18 @@ import Auth from '../lib/auth.js';
 
 const domain = '/api';
 
-async function create(resource, data, auth = true) {
+async function create(resource, data, auth = true, formData = false) {
   const url = `${domain}${resource}`;
 
   const config = {
     method: 'POST',
-    mode: 'cors',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
+    body: formData ? data : JSON.stringify(data),
+    headers: {},
   };
+
+  if (!formData) {
+    config.headers['Content-Type'] = 'application/json; charset=UTF-8';
+  }
 
   if (auth) {
     config.headers.Authorization = `Bearer ${Auth.getToken()}`;
@@ -20,7 +21,7 @@ async function create(resource, data, auth = true) {
 
   const res = await fetch(url, config);
 
-  if (res.status === 401) {
+  if (auth && res.status === 401) {
     Auth.signout();
   }
 
@@ -46,18 +47,20 @@ async function read(resource) {
   return await res.json();
 }
 
-async function update(resource, data) {
+async function update(resource, data, formData = false) {
   const url = `${domain}${resource}`;
 
   const config = {
     method: 'PUT',
-    mode: 'cors',
-    body: JSON.stringify(data),
+    body: formData ? data : JSON.stringify(data),
     headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
       Authorization: `Bearer ${Auth.getToken()}`,
     },
   };
+
+  if (!formData) {
+    config.headers['Content-Type'] = 'application/json; charset=UTF-8';
+  }
 
   const res = await fetch(url, config);
 
@@ -73,7 +76,6 @@ async function remove(resource) {
 
   const config = {
     method: 'DELETE',
-    mode: 'cors',
     headers: {
       Authorization: `Bearer ${Auth.getToken()}`,
     },

@@ -33,4 +33,12 @@ model User {
   email       String       @unique
   password    String
   investments Investment[]
+  image       Image?
+}
+
+model Image {
+  id     String @id @default(uuid())
+  path   String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
 }

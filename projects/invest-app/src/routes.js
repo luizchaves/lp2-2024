@@ -1,16 +1,20 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import multer from 'multer';
 import { z } from 'zod';
 
 import { isAuthenticated } from './middleware/auth.js';
 import { validate } from './middleware/validate.js';
+
+import uploadConfig from './config/multer.js';
 
 import SendMail from './services/SendMail.js';
 
 import Category from './models/Category.js';
 import Investment from './models/Investment.js';
 import User from './models/User.js';
+import Image from './models/Image.js';
 
 class HTTPError extends Error {
   constructor(message, code) {
@@ -245,6 +249,52 @@ router.get('/users/me', isAuthenticated, async (req, res) => {
     throw new HTTPError('Unable to find user', 400);
   }
 });
+
+router.post(
+  '/users/image',
+  isAuthenticated,
+  multer(uploadConfig).single('image'),
+  async (req, res) => {
+    try {
+      const userId = req.userId;
+
+      if (req.file) {
+        const path = `/imgs/profile/${req.file.filename}`;
+
+        await Image.create({ userId, path });
+
+        res.sendStatus(201);
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
+      throw new HTTPError('Unable to create image', 400);
+    }
+  }
+);
+
+router.put(
+  '/users/image',
+  isAuthenticated,
+  multer(uploadConfig).single('image'),
+  async (req, res) => {
+    try {
+      const userId = req.userId;
+
+      if (req.file) {
+        const path = `/imgs/profile/${req.file.filename}`;
+
+        const image = await Image.update({ userId, path });
+
+        res.json(image);
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
+      throw new HTTPError('Unable to create image', 400);
+    }
+  }
+);
 
 router.post(
   '/signin',

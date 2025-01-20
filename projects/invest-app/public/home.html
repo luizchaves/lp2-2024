@@ -16,7 +16,7 @@
   <body class="pb-5">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container">
-        <a class="navbar-brand" href="#">Invest App</a>
+        <a class="navbar-brand" href="/home.html">Invest App</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -31,7 +31,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#"
+              <a class="nav-link active" aria-current="page" href="/home.html"
                 >Investimento</a
               >
             </li>
@@ -43,11 +43,20 @@
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <span class="iconify" data-icon="mdi:account"></span>
+              <img
+                id="dropdown-avatar"
+                src="/imgs/profile/avatar.png"
+                alt="Foto de Perfil"
+                width="30px"
+                class="border border-secondary-subtle border-4 rounded-circle"
+              />
             </div>
             <ul class="dropdown-menu dropdown-menu-end">
               <li>
                 <h5 id="user-name" class="dropdown-header"></h5>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/profile.html">Profile</a>
               </li>
               <li>
                 <a class="dropdown-item" href="#" onclick="signout()">Sair</a>
