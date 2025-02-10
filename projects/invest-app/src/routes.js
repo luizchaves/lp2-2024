@@ -52,7 +52,7 @@ router.post(
 
       const createdInvestment = await Investment.create(investment);
 
-      return res.json(createdInvestment);
+      return res.status(201).json(createdInvestment);
     } catch (error) {
       throw new HTTPError('Unable to create investment', 400);
     }
